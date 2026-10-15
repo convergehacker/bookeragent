@@ -1,0 +1,32 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #0a0a0a;
+  color: #e5e5e5;
+}
+main { max-width: 880px; margin: 0 auto; padding: 2rem 1rem; }
+h1 { font-size: 1.4rem; } h2 { font-size: 1rem; color: #a3a3a3; margin-top: 2rem; }
+.card {
+  border: 1px solid #262626; border-radius: 8px;
+  padding: 1rem; margin: 0.75rem 0; background: #111;
+}
+.row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+input, select {
+  background: #1a1a1a; border: 1px solid #333; color: #e5e5e5;
+  border-radius: 6px; padding: 0.4rem 0.6rem; font: inherit; font-size: 0.85rem;
+}
+button {
+  background: #e5e5e5; color: #0a0a0a; border: 0; border-radius: 6px;
+  padding: 0.4rem 0.9rem; font: inherit; font-size: 0.85rem;
+  font-weight: 600; cursor: pointer;
+}
+button.secondary { background: #262626; color: #e5e5e5; }
+button:disabled { opacity: 0.4; cursor: default; }
+.mono { font-size: 0.75rem; color: #737373; word-break: break-all; }
+.tag {
+  display: inline-block; background: #1f2a1f; color: #86efac;
+  border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-right: 0.25rem;
+}
+.err { color: #f87171; font-size: 0.85rem; }
+.ok { color: #4ade80; font-size: 0.85rem; }

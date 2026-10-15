@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Identity {
+  did        String   @id
+  actorType  String // musician | venue
+  profile    Json
+  createdAt  DateTime @default(now())
+
+  sessions    Session[]
+  slots       Slot[]       @relation("VenueSlots")
+  availabilities Availability[]
+  bookingsAsVenue    Booking[] @relation("VenueBookings")
+  bookingsAsMusician Booking[] @relation("MusicianBookings")
+}
+
+model Challenge {
+  nonce     String   @id
+  did       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  token     String   @id
+  did       String
+  identity  Identity @relation(fields: [did], references: [did], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Slot {
+  id            String   @id @default(cuid())
+  venueDid      String
+  venue         Identity @relation("VenueSlots", fields: [venueDid], references: [did], onDelete: Cascade)
+  startsAt      DateTime
+  endsAt        DateTime
+  slotType      String
+  genresWanted  Json
+  payCents      Int?
+  payModel      String
+  needsOwnPa    Boolean  @default(false)
+  status        String   @default("open") // open | filled | cancelled
+  createdAt     DateTime @default(now())
+
+  bookings Booking[]
+
+  @@index([status, startsAt])
+}
+
+model Availability {
+  id          String   @id @default(cuid())
+  musicianDid String
+  musician    Identity @relation(fields: [musicianDid], references: [did], onDelete: Cascade)
+  startsAt    DateTime
+  endsAt      DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([musicianDid])
+}
+
+model Booking {
+  id                 String   @id @default(cuid())
+  slotId             String
+  slot               Slot     @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  venueDid           String
+  venue              Identity @relation("VenueBookings", fields: [venueDid], references: [did])
+  musicianDid        String
+  musician           Identity @relation("MusicianBookings", fields: [musicianDid], references: [did])
+  state              String   @default("proposed") // proposed|accepted|declined|cancelled|performed|attested|disputed|expired
+  terms              Json
+  utility            Float?
+  rationale          Json?
+  coordinatorVersion String
+  inputHash          String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  attestations Attestation[]
+
+  @@unique([slotId, musicianDid])
+  @@index([musicianDid, state])
+  @@index([venueDid, state])
+}
+
+model Attestation {
+  id         String   @id @default(cuid())
+  type       String // GigCompleted | Vouch | Referral | Dispute
+  issuerDid  String
+  subjectDid String
+  bookingId  String?
+  booking    Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  claims     Json
+  signature  String
+  state      String   @default("sealed") // sealed | revealed | expired
+  issuedAt   DateTime @default(now())
+  revealAfter DateTime?
+
+  @@index([subjectDid, type])
+  @@index([bookingId])
+  @@unique([bookingId, issuerDid])
+}

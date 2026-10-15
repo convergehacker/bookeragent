@@ -1,0 +1,16 @@
+{
+  "name": "booker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Trustless coordination network pairing musicians with venues",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev:api": "pnpm --filter @booker/api dev",
+    "dev:web": "pnpm --filter @booker/web dev",
+    "db:up": "docker compose up -d",
+    "db:push": "pnpm --filter @booker/api db:push",
+    "db:generate": "pnpm --filter @booker/api db:generate",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

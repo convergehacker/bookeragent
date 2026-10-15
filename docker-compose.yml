@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: booker-postgres
+    environment:
+      POSTGRES_USER: booker
+      POSTGRES_PASSWORD: booker
+      POSTGRES_DB: booker
+    ports:
+      - "7105:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
