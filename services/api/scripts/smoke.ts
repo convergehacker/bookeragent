@@ -4,7 +4,7 @@ import {
   signPayload,
 } from "@booker/schema";
 
-const API = "http://localhost:7100";
+const API = process.env.API_URL ?? "http://localhost:7100";
 
 async function call<T = any>(path: string, opts: any = {}): Promise<T> {
   const res = await fetch(`${API}${path}`, {
