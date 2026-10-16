@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import { z } from "zod";
 import { db } from "./db.js";
 import { issueChallenge, verifyChallenge } from "./auth.js";
@@ -9,6 +10,11 @@ import { coordinateRoutes } from "./routes/coordinate.js";
 import { reputationRoutes } from "./routes/reputation.js";
 
 const app = Fastify({ logger: true });
+
+await app.register(cors, {
+  origin: true,
+  methods: ["GET", "POST", "DELETE", "OPTIONS"],
+});
 
 app.get("/health", async () => ({ ok: true }));
 
